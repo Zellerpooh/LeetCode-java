@@ -3,10 +3,7 @@ package map_set;
 import utils.Log;
 import utils.MethodTimeUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Zeller
@@ -16,16 +13,24 @@ import java.util.List;
  **/
 public class ThreeSum {
     public static void main(String[] args) {
-        int[] inputs = {-1, 0, 1, 2, -1, -4};
+        int[] inputs = {-1, 0, 1, 2, -1, -4, -2, 10, 3, -12, 41, 54135, 13321, 41, -431, -321, 321, -432, 452, 421, -532, -559, 3432};
 
         MethodTimeUtils.getInstance().start();
-        List<List<Integer>> results = threeSum(inputs);
+        List<List<Integer>> results = threeSumWithoutHash(inputs);
         MethodTimeUtils.getInstance().end();
-
+        showResult(results);
     }
 
-    public static List<List<Integer>> threeSum(int[] num) {
+    private static void showResult(List<List<Integer>> results) {
+        for (int i = 0; i < results.size(); i++) {
+            System.out.println("{ ");
+            List<Integer> list = results.get(i);
+            System.out.println("{" + list.get(0) + "," + list.get(1) + "," + list.get(2) + "}");
+            System.out.println(" }");
+        }
+    }
 
+    public static List<List<Integer>> threeSumWithoutHash(int[] num) {
         Arrays.sort(num);
         List<List<Integer>> results = new LinkedList<>();
 
@@ -45,6 +50,30 @@ public class ThreeSum {
             }
         }
         return results;
+    }
+
+    public static List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        Set<Integer> firstNum = new HashSet<>();
+        for (int i = 0; i < nums.length - 2; i++) {
+            if (!firstNum.contains(nums[i])) {
+                int sum = -nums[i];
+                Set<Integer> secondNum = new HashSet<>();
+                Set<Integer> thirdNum = new HashSet<>();
+                for (int j = i + 1; j < nums.length; j++) {
+                    if (!firstNum.contains(nums[j]) && !thirdNum.contains(nums[j])) {
+                        if (secondNum.contains(sum - nums[j])) {
+                            res.add(Arrays.asList(nums[i], nums[j], sum - nums[j]));
+                            thirdNum.add(nums[j]);
+                        } else {
+                            secondNum.add(nums[j]);
+                        }
+                    }
+                }
+                firstNum.add(nums[i]);
+            }
+        }
+        return res;
     }
 
 }
